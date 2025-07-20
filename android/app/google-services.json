@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "449261799951",
+    "project_id": "studyproai-ade5f",
+    "storage_bucket": "studyproai-ade5f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:449261799951:android:1c8d808b5446be8e05317a",
+        "android_client_info": {
+          "package_name": "com.studypro1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB0XVBe623ToPpWyarMNQHwvvtPVk4KouY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
