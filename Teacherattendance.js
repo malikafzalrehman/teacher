@@ -19,6 +19,7 @@ import {
 
 import { Delete, getAllOfCollectionwhere, getAllOfCollectionwhere1, getAllOfCollectionwherewhere, saveData, upDateCollectionData } from './service/main';
 import { useSelector } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
 
 // Initialize Firebase (replace with your config)
 
@@ -41,7 +42,7 @@ const formatMonth = (date) => {
 
 const formatYear = (date) => new Date(date).getFullYear().toString();
 
-const TeacherAttendance = () => {
+const TeacherAttendance = (props) => {
   const [attendance , setAttendance] = useState();
   const [state, setState] = useState({
     students: [],
@@ -686,7 +687,7 @@ function formatDateToYYYYMMDD2(dateString) {
   const renderMonthlyView = () => {
     const monthData = getMonthlyAttendance();
     const currentMonth = formatMonth(state.currentDate);
-    
+    const nav=useNavigation()
     return (
       <ScrollView style={styles.monthlyView}>
         <Text style={styles.sectionHeader}>
@@ -736,7 +737,8 @@ function formatDateToYYYYMMDD2(dateString) {
               console.log(dateStr)
               let datemy=formatDateToYYYYMMDD2(dateStr)
             let students=await getAllOfCollectionwhere("attendance","currentDate",datemy)
-            setAllAttendes(students)
+            console.log(students)
+         nav.navigate("allAttendes",students)
             }}>
                 <Text style={styles.dayHeader}>
                 {dateStr} 

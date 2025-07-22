@@ -17,7 +17,7 @@ import AdminDash from './AdminDash';
 import KidsScreen from './KidsScreen';
 import QuranScreen from './QuranScreen';
 import Schoolonlinesetup from './Schoolonlinesetup';
-import Mycollege from './Mycollege';
+// import Mycollege from './';
 import Myuniversity from './Myuniversity';
 import Headpanel from './Headpanel';
 import Teacherdashborad from './Teacherdashborad';
@@ -58,6 +58,8 @@ import Hnotification from './Hnotification';
 import Studentnotification from './Studentnotification';
 import Parentnotification from './Parentnotification';
 import Teachernotification from './Teachernotification';
+import AllAttendes from './allAttendes';
+import affiliate from './Affiliate';
 
 const Stack = createStackNavigator();
 
@@ -83,7 +85,7 @@ const App = () => {
          <Stack.Screen name="quran" component={QuranScreen} />  
           <Stack.Screen name="schoolonlinesetup" component={Schoolonlinesetup} /> 
           
-           <Stack.Screen name="college" component={Mycollege} /> 
+           {/* <Stack.Screen name="college" component={Mycollege} />  */}
              <Stack.Screen name="university" component={Myuniversity} /> 
              <Stack.Screen name="headpanel" component={Headpanel} />
              <Stack.Screen name="teacherdashborad" component={Teacherdashborad} />
@@ -120,6 +122,9 @@ const App = () => {
                      <Stack.Screen name="tnotification" component={Teachernotification} />
                       <Stack.Screen name="studentnotification" component={Studentnotification} />
                        <Stack.Screen name="parentnotification" component={Parentnotification} />
+                       <Stack.Screen name="allAttendes" component={AllAttendes} />
+                       <Stack.Screen name="affilate" component={affiliate} />
+
 
 
       </Stack.Navigator>
