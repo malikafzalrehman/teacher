@@ -54,6 +54,7 @@ const TeacherAttendance = (props) => {
     newStudentEmail: '',
     newStudentSeaction: '',
     newStudentPhone: '',
+    newStudentpassword:"",
 
 
 
@@ -430,7 +431,13 @@ let id= Date.now().toString()
       attendancePercentage: 100,
       teacherID:userData.counter.user.id,
     currentDate:currentDate,
-    sid:id
+    password:state.newStudentpassword,
+    sid:userData.counter.user.schoolId,
+    school:userData.counter.user.school,
+    email:state.newStudentEmail,
+      role:
+"student"
+
     };
     // console.log(newStudent)
     try {
@@ -1013,6 +1020,13 @@ function formatDateToYYYYMMDD2(dateString) {
             placeholder="Enter Email"
             value={state.newStudentEmail}
             onChangeText={(text) => setState(prev => ({ ...prev, newStudentEmail: text }))}
+          />
+           <Text style={styles.modalLabel}>Password:</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Password"
+            value={state.newStudentpassword}
+            onChangeText={(text) => setState(prev => ({ ...prev, newStudentpassword: text }))}
           />
           <View style={styles.modalButtons}>
             <TouchableOpacity 

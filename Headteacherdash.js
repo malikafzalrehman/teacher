@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Alert, ScrollView, Modal, TextInput } from 'react-native';
+import { useSelector } from 'react-redux';
+import { getAllOfCollectionwhere, getAllOfCollectionwhere1, saveData } from './service/main';
 
 // Enhanced Data Structures
 const allGrades = ['Prep', 'Nursery', 'KG', ...Array.from({length: 12}, (_, i) => `Grade ${i+1}`)];
@@ -58,7 +60,7 @@ const mockClasses = generateMockClasses();
 const mockTimetable = generateMockTimetable();
 
 const HeadteacherDash = () => {
-  const [teachers, setTeachers] = useState(mockTeachers);
+  const [teachers, setTeachers] = useState([]);
   const [classes, setClasses] = useState(mockClasses);
   const [timetable, setTimetable] = useState(mockTimetable);
   const [subjects, setSubjects] = useState(baseSubjects);
@@ -76,6 +78,8 @@ const HeadteacherDash = () => {
     qualifications: '',
     contact: ''
   });
+  const state=useSelector(state=>state)
+ 
   const [newSubject, setNewSubject] = useState('');
 
   // Filter timetable based on selections
@@ -85,6 +89,9 @@ const HeadteacherDash = () => {
     item.day === selectedDay
   );
 
+  useEffect(()=>{
+    getTEacherByheadID()
+  },[])
   // Get current class details
   const currentClass = classes.find(c => 
     c.grade === selectedGrade && c.section === selectedSection
@@ -94,7 +101,6 @@ const HeadteacherDash = () => {
   const assignTeacherToPeriod = (teacherId, periodId) => {
     const updatedTimetable = timetable.map(item => {
       if (item.id === periodId) {
-        const teacher = teachers.find(t => t.id === teacherId);
         return {
           ...item,
           teacherId,
@@ -105,28 +111,42 @@ const HeadteacherDash = () => {
     setTimetable(updatedTimetable);
     Alert.alert('Success', 'Teacher assigned successfully!');
   };
-
+const getTEacherByheadID=async()=>{
+  console.log(state.counter.user.id);
+  
+  let data=await getAllOfCollectionwhere("Teacher","headid",state.counter.user.id)
+  setTeachers(data)
+  
+}
   // Add new teacher
-  const handleAddTeacher = () => {
-    if (!newTeacher.name || !newTeacher.qualifications) {
-      Alert.alert('Error', 'Please fill all required fields');
-      return;
-    }
-
+  const handleAddTeacher =async () => {
+    // if (!newTeacher.name || !newTeacher.qualifications) {
+    //   Alert.alert('Error', 'Please fill all required fields');
+    //   return;
+    // }
+let id= `T-${Math.floor(1000 + Math.random() * 9000)}`
     const teacher = {
-      id: `T-${Math.floor(1000 + Math.random() * 9000)}`,
+      id:id,
       ...newTeacher,
       isAdminAdded: true,
       joiningDate: new Date().toISOString().split('T')[0],
-    };
+      headid:state.counter.user.id,
+      schoolId:state.counter.user.schoolId,
+      school:state.counter.user.school,
+      role:
+"teacher"
 
-    setTeachers([...teachers, teacher]);
-    setNewTeacher({
-      name: '',
-      subjects: [],
-      qualifications: '',
-      contact: ''
-    });
+    };
+    await saveData("Teacher",id,teacher)
+
+    // setTeachers([...teachers, teacher]);
+    // setNewTeacher({
+    //   name: '',
+    //   subjects: [],
+    //   qualifications: '',
+    //   contact: ''
+    // });
+       getTEacherByheadID()
     setIsTeacherModalVisible(false);
     Alert.alert('Success', 'Teacher added successfully!');
   };
@@ -343,25 +363,45 @@ const HeadteacherDash = () => {
             <TextInput
               style={styles.input}
               placeholder="Full Name"
+              placeholderTextColor={"black"}
               value={newTeacher.name}
               onChangeText={text => setNewTeacher({...newTeacher, name: text})}
             />
             
             <TextInput
               style={styles.input}
+              placeholderTextColor={"black"}
+
               placeholder="Qualifications (e.g., M.Ed)"
               value={newTeacher.qualifications}
               onChangeText={text => setNewTeacher({...newTeacher, qualifications: text})}
             />
             
             <TextInput
-              style={styles.input}
+              placeholderTextColor={"black"}
+
+style={styles.input}
               placeholder="Contact Number"
               value={newTeacher.contact}
               onChangeText={text => setNewTeacher({...newTeacher, contact: text})}
               keyboardType="phone-pad"
             />
-            
+             <TextInput
+                placeholderTextColor={"black"}
+              style={styles.input}
+              placeholder="Email"
+              value={newTeacher.password}
+              onChangeText={text => setNewTeacher({...newTeacher, email: text})}
+              keyboardType="email"
+            />
+              <TextInput
+                 placeholderTextColor={"black"}
+              style={styles.input}
+              placeholder="Password"
+              value={newTeacher.password}
+              onChangeText={text => setNewTeacher({...newTeacher, password: text})}
+              keyboardType="password"
+            />
             <Text style={styles.subLabel}>Select Subjects:</Text>
             <View style={styles.modalSubjects}>
               {subjects.map(subject => (
@@ -730,6 +770,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 10,
     marginBottom: 15,
+    color:"black"
   },
   subLabel: {
     marginBottom: 10,

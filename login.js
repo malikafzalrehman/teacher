@@ -16,6 +16,7 @@ import { useNavigation } from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
 import { useDispatch } from 'react-redux';
 import { userData } from './redux/slices/counterSlices';
+import { getAllOfCollectionwherewhere } from './service/main';
 
 const Login = (props) => {
   const navigation = useNavigation();
@@ -74,10 +75,11 @@ const Login = (props) => {
     try {
       const querySnapshot = await firestore().collection('Users').get();
       let userFound = false;
-      
+      let count=0;
       querySnapshot.forEach(documentSnapshot => {
         const item = documentSnapshot.data();
         if (item.email === email && password === item.password) {
+          
           userFound = true;
           dispatch(userData(item));
           props.navigation.navigate("Home");
@@ -85,7 +87,26 @@ const Login = (props) => {
       });
       
       if (!userFound) {
-        Alert.alert('Error', 'Invalid email or password');
+        // console.log("Teacher","email",email,"password",password);
+        
+         const querySnapshot = await getAllOfCollectionwherewhere("Teacher","email",email,"password",password);
+      
+          if(querySnapshot.length>0)
+          {
+            dispatch(userData(querySnapshot[0]));
+          props.navigation.navigate("Home");
+       
+          }else{
+               const querySnapshot = await getAllOfCollectionwherewhere("students","email",email,"password",password);
+             if(querySnapshot.length>0)
+          {
+            dispatch(userData(querySnapshot[0]));
+          props.navigation.navigate("Home");
+       
+          }else{
+             Alert.alert('Error', 'Invalid email or password');
+          }
+          }
       }
     } catch (error) {
       Alert.alert('Error', 'Failed to login. Please try again.');

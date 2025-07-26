@@ -25,6 +25,8 @@ import storage from '@react-native-firebase/storage';
 import { Dropdown } from 'react-native-element-dropdown';
 import ImagePicker from 'react-native-image-crop-picker';
 import moment from 'moment';
+import { getAllOfCollectionwhere } from './service/main';
+import { useSelector } from 'react-redux';
 
 const { width } = Dimensions.get('window');
 
@@ -54,6 +56,8 @@ const HeadPanel = () => {
   const [activeTab, setActiveTab] = useState('profile');
   const [posts, setPosts] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+const state=useSelector(state=>state)
+// console.log("redux",state);
 
   useEffect(() => {
     getAllSchools();
@@ -77,14 +81,15 @@ const HeadPanel = () => {
 
   const getAllSchools = async () => {
     try {
-      const schoolRef = firestore().collection('School');
-      const querySnapshot = await schoolRef.get();
       
-      const schoolList = querySnapshot.docs.map(doc => ({
-        label: doc.data().name,
-        value: doc.data().name,
+      const querySnapshot = await getAllOfCollectionwhere("Schools","adminId",state.counter.user.id);
+      
+      const schoolList = querySnapshot.map(doc => ({
+        label: doc.basicInfo.name,
+        value: doc.basicInfo.name,
         id: doc.id
       }));
+      // console.log(schoolList);
       
       setData(schoolList);
     } catch (error) {
@@ -200,7 +205,7 @@ const HeadPanel = () => {
         ...formData,
         id: "head-" + Date.now(),
         schoolId: selectedSchool?.id || '',
-        createdAt: firestore.FieldValue.serverTimestamp(),
+      adminId:state.counter.user.id,
         role: 'head',
         profileImage: imageUrl || null
       };
